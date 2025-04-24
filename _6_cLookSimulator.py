@@ -19,13 +19,12 @@ def c_look(start, requests):
 
     return total, sequence
 
-# Plotting function for C-LOOK
 def plot_c_look(start, sequence, total):
     x = list(range(len(sequence) + 1))
     y = [start] + sequence
 
     plt.figure(figsize=(10, 5))
-    plt.step(x, y, where='mid', label=f'C-LOOK (Total Head Movement: {total})', linewidth=2)
+    plt.step(x, y, where='mid', label=f'C-LOOK (Total Head Movement: {total})', linewidth=2, color='brown')
 
     for i, val in enumerate(y):
         plt.text(x[i], val + 2, str(val), ha='center', va='bottom')
@@ -38,12 +37,24 @@ def plot_c_look(start, sequence, total):
     plt.tight_layout()
     plt.show()
 
-# Example usage
-if __name__ == "__main__":
-    start = 50
-    requests = [82, 170, 43, 140, 24, 16, 190]
+def get_user_input():
+    try:
+        start = int(input("Enter initial head position: "))
+        requests_input = input("Enter disk requests (comma-separated): ")
+        requests = [int(x.strip()) for x in requests_input.split(',') if x.strip().isdigit()]
+        return start, requests
+    except ValueError:
+        print("Invalid input! Please enter valid integers.")
+        return None, None
 
-    total, sequence = c_look(start, requests)
-    print("C-LOOK Total Head Movement:", total)
-    print("C-LOOK Sequence:", sequence)
-    plot_c_look(start, sequence, total)
+if __name__ == "__main__":
+    start, requests = get_user_input()
+
+    if start is not None and requests:
+        total, sequence = c_look(start, requests)
+        print("\nC-LOOK Seek Sequence:", sequence)
+        print("Total Head Movement:", total)
+        plot_c_look(start, sequence, total)
+    else:
+        print("No valid data to process.")
+

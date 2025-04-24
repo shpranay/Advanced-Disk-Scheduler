@@ -16,7 +16,7 @@ def sstf_scheduling(requests, head):
 
     return sequence, total_movement
 
-def visualize_sstf(requests, head, sequence):
+def visualize_sstf(head, sequence):
     x = [0]
     y = [head]
     x_pos = 1
@@ -28,6 +28,10 @@ def visualize_sstf(requests, head, sequence):
 
     plt.figure(figsize=(8, 5))
     plt.plot(x, y, marker='o', linestyle='-', color='blue')
+
+    for i in range(len(x)):
+        plt.text(x[i], y[i], str(y[i]), fontsize=9, ha='right')
+
     plt.title("SSTF Disk Scheduling")
     plt.xlabel("Sequence")
     plt.ylabel("Track Number")
@@ -35,13 +39,25 @@ def visualize_sstf(requests, head, sequence):
     plt.xticks(range(len(x)))
     plt.show()
 
-# Example usage
+def get_user_input():
+    try:
+        head = int(input("Enter initial head position: "))
+        requests_input = input("Enter disk requests (comma-separated): ")
+        requests = [int(x.strip()) for x in requests_input.split(',') if x.strip().isdigit()]
+        return head, requests
+    except ValueError:
+        print("Invalid input! Please enter integers only.")
+        return None, None
+
 if __name__ == "__main__":
-    requests = [98, 183, 37, 122, 14, 124, 65, 67]
-    head = 53
+    head, requests = get_user_input()
 
-    sequence, movement = sstf_scheduling(requests, head)
-    print("SSTF Seek Sequence:", sequence)
-    print("Total Head Movement:", movement)
+    if head is not None and requests:
+        sequence, movement = sstf_scheduling(requests, head)
 
-    visualize_sstf(requests, head, sequence)
+        print("\nSSTF Seek Sequence:", sequence)
+        print("Total Head Movement:", movement)
+
+        visualize_sstf(head, sequence)
+    else:
+        print("No valid data to process.")
